@@ -1,0 +1,32 @@
+File Monitor Test Instructions
+
+1. Prerequisites:
+   - Ensure you have Python 3.6 or higher installed.
+   - Install the required dependencies by running:
+       pip install -r requirements.txt
+
+2. Running the Script:
+   - Open your terminal and navigate to the project directory.
+   - Start the monitor by running:
+       python monitor.py -p . -c file_events.csv
+     This command tells the script to monitor the current directory and log events in "file_events.csv".
+
+3. Testing the Monitor:
+   - This file ("test_file.txt") is provided for testing purposes.
+   - Open this file and make any changes (e.g., add, modify, or remove some text), then save the file.
+   - The script should detect the changes and log the events (such as file modifications) in the "file_events.csv" file.
+   - Open "file_events.csv" to verify that your changes have been recorded, including details such as timestamp, event type, file hash, and more.
+
+4. Optional – Email Notifications:
+   - If you want to enable email notifications for file changes, pass the additional email arguments when running the script:
+       python monitor.py -p . -c file_events.csv --email YOUR_EMAIL --password YOUR_PASSWORD --recipient RECIPIENT_EMAIL
+   - Ensure you have a working SMTP server setup (default is "smtp.example.com" on port 587) or modify the SMTP settings as needed.
+
+5. Making Changes:
+   - Feel free to experiment with modifications in this test file.
+   - Each time you update this file, check the console log and the "file_events.csv" file to see the updated file events.
+
+6. Troubleshooting:
+   - If you experience issues, check the terminal output for error messages.
+   - Ensure that the monitored directory exists and that you have appropriate read/write permissions.
+   - Verify that the dependencies in "requirements.txt" are properly installed.
