@@ -144,10 +144,32 @@ class FileEventHandler(FileSystemEventHandler):
         if os.path.abspath(event.src_path) == self.csv_file_abs:
             return
         logging.info(f"File deleted: {event.src_path}")
+
+        # Retrieve existing metadata before removing the entry
+        existing_metadata = self.get_metadata_from_csv(event.src_path)
+        metadata = {
+            'file_path': event.src_path,
+            'timestamp': datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            'event_type': 'deleted',
+            'file_hash': self.hash_dict.get(event.src_path),
+            'file_size_kb': None,
+            'owner': None,
+            'permissions': None,
+        }
+        if existing_metadata:
+            metadata.update({
+                'file_hash': existing_metadata.get('file_hash'),
+                'file_size_kb': existing_metadata.get('file_size_kb'),
+                'owner': existing_metadata.get('owner'),
+                'permissions': existing_metadata.get('permissions'),
+            })
+
+        self.log_event(metadata)
+
         if event.src_path in self.hash_dict:
             del self.hash_dict[event.src_path]
-            # Remove entry from CSV
-            self.remove_entry_from_csv(event.src_path)
+        # Remove entry from CSV
+        self.remove_entry_from_csv(event.src_path)
 
     def remove_entry_from_csv(self, file_path):
         """Remove a file entry from the CSV."""
@@ -160,6 +182,19 @@ class FileEventHandler(FileSystemEventHandler):
             logging.warning("CSV file not found, cannot remove entry.")
         except Exception as e:
             logging.error(f"Error removing entry from CSV: {e}")
+
+    def get_metadata_from_csv(self, file_path):
+        """Retrieve the last known metadata for a file from the CSV."""
+        try:
+            df = pd.read_csv(self.csv_file)
+            row = df[df['file_path'] == file_path]
+            if not row.empty:
+                return row.iloc[0].to_dict()
+        except FileNotFoundError:
+            logging.warning("CSV file not found when retrieving metadata.")
+        except Exception as e:
+            logging.error(f"Error retrieving metadata from CSV: {e}")
+        return None
 
 
 def load_existing_hashes(csv_file):

@@ -5,7 +5,7 @@ A Python-based tool that monitors directories for file events (creation, modific
 ## Features
 
 - **Real-Time Monitoring:** Automatically detect file creation, modification, and deletion.
-- **Detailed Logging:** Record file metadata including SHA-256 hash, size (in KB), owner, permissions, and timestamps.
+- **Detailed Logging:** Record file metadata including SHA-256 hash, size (in KB), owner, permissions, and timestamps. Deletions are also logged with the last known metadata.
 - **CSV Logging:** All events are logged to a specified CSV file.
 - **Email Notifications:** Optional email alerts when a file’s hash changes.
 - **Configurable:** Easily adjust monitoring directory, CSV log file, and email settings via command-line arguments.
